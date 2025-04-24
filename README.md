@@ -1,31 +1,22 @@
-# Thanda House 🧊
+# Thanda House 🍻
 
-Thanda House is a modern eCommerce website focused on selling cold drinks and soft beverages across India. The goal is to provide a smooth, clean, and beautiful user experience with fast loading, stylish design, and Gen-Z appeal.
+Thanda House is a modern, Gen-Z inspired eCommerce website focused on delivering a wide variety of beer brands across India. It’s built to provide a premium, fast, and stylish shopping experience for users, with smooth animations, modern design, and a strong visual identity.
 
-## 🛠 Tech Stack
+## 🔥 Key Highlights
+
+- Fast and clean user interface
+- High-quality design and UI/UX
+- Product listings for various beer brands
+- Future support for cart, checkout, and payments
+- AI-powered search and recommendations *(coming soon)*
+
+## 🛠️ Tech Stack
 
 - HTML
 - Tailwind CSS
 - JavaScript
-- Figma (for UI design)
-- [More will be added as project grows]
+- Figma (for wireframes and UI design)
+- [More technologies will be added as the project grows]
 
-## 🚀 Project Goals
-
-- Build a fast and attractive online shop for soft drinks
-- Add smooth animations, transitions, and parallax effects
-- Integrate AI-powered recommendations *(future idea)*
-- Razorpay or Stripe for payment
-- Admin dashboard *(later phase)*
-
-
-## 📌 Status
-
-🚧 Work in progress — UI wireframes & design phase
-
----
-
-> Built with ❤️ by [Mukul Singhal]
-
-
+## 📁 Project Structure (Planned)
 
