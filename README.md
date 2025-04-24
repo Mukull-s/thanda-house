@@ -18,5 +18,14 @@ Thanda House is a modern, Gen-Z inspired eCommerce website focused on delivering
 - Figma (for wireframes and UI design)
 - [More technologies will be added as the project grows]
 
-## 📁 Project Structure (Planned)
+
+## 🚧 Project Status
+
+Currently in design and development phase.  
+Wireframing and UI/UX planning is in progress.
+
+---
+
+> 🍺 Built with love, design, and code by [Mukul Singhal]
+
 
