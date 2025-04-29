@@ -1,4 +1,8 @@
 import React, { useState, CSSProperties } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { auth } from '../config/firebase';
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import axios from 'axios';
 
 // Add Poppins font globally
 if (typeof window !== 'undefined' && !document.getElementById('poppins-font')) {
@@ -9,22 +13,68 @@ if (typeof window !== 'undefined' && !document.getElementById('poppins-font')) {
   document.head.appendChild(link);
 }
 
+type Address = {
+  street: string;
+  city: string;
+  state: string;
+  pincode: string;
+};
+
+type RegisterForm = {
+  name: string;
+  email: string;
+  password: string;
+  confirm: string;
+  phone: string;
+  address: Address;
+};
+
 const RegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const [error, setError] = useState('');
-  const [form, setForm] = useState({
+  const [loading, setLoading] = useState(false);
+  const [form, setForm] = useState<RegisterForm>({
     name: '',
     email: '',
     password: '',
     confirm: '',
+    phone: '',
+    address: {
+      street: '',
+      city: '',
+      state: '',
+      pincode: ''
+    }
   });
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    // For address fields (e.g., address.street)
+    if (name.startsWith('address.')) {
+      const addressKey = name.split('.')[1] as keyof Address;
+      setForm(prev => ({
+        ...prev,
+        address: {
+          ...prev.address,
+          [addressKey]: value
+        }
+      }));
+      return;
+    }
+
+    // For top-level fields
+    if (name in form) {
+      setForm(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.password || !form.confirm) {
       setError('Please fill in all fields.');
@@ -39,8 +89,103 @@ const RegisterPage = () => {
       return;
     }
     setError('');
-    // TODO: Add real registration logic
-    alert('Registered!');
+    setLoading(true);
+    try {
+      // First create the user in Firebase
+      const userCredential = await createUserWithEmailAndPassword(auth, form.email, form.password);
+      const { user } = userCredential;
+
+      if (!user) {
+        throw new Error('Failed to create user account');
+      }
+
+      console.log('Firebase user created:', user.uid);
+
+      // Get a fresh token
+      const idToken = await user.getIdToken(true);
+      console.log('Token obtained, length:', idToken.length);
+
+      try {
+        // Then save user data to MongoDB
+        const response = await axios.post('http://localhost:5000/api/users', 
+          {
+            firebaseUid: user.uid,
+            email: form.email,
+            name: form.name,
+            phone: form.phone,
+            address: form.address
+          },
+          {
+            headers: {
+              'Authorization': `Bearer ${idToken}`,
+              'Content-Type': 'application/json'
+            }
+          }
+        );
+
+        console.log('Server response:', response.status, response.data);
+
+        if (response.status === 201) {
+          navigate('/dashboard');
+        } else {
+          console.error('Server response:', response.data);
+          throw new Error(response.data.message || 'Failed to create user profile');
+        }
+      } catch (apiError: any) {
+        console.error('API error details:', apiError.response?.data);
+        // If MongoDB save fails, delete the Firebase user
+        await user.delete();
+        if (apiError.response?.data?.message) {
+          setError(apiError.response.data.message);
+        } else {
+          setError('Failed to create user profile. Please try again.');
+        }
+      }
+    } catch (err: any) {
+      console.error('Registration error details:', err);
+      if (err.code === 'auth/email-already-in-use') {
+        setError('Email is already registered. Please use a different email.');
+      } else {
+        setError(err.message || 'Registration failed. Please try again.');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSignUp = async () => {
+    setError('');
+    setLoading(true);
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      const { user } = result;
+      const idToken = await user.getIdToken();
+
+      // Save Google user data to MongoDB
+      await axios.post('http://localhost:5000/api/users', {
+        email: user.email,
+        name: user.displayName || '',
+        phone: user.phoneNumber || '',
+        address: {
+          street: '',
+          city: '',
+          state: '',
+          pincode: ''
+        }
+      }, {
+        headers: {
+          'Authorization': `Bearer ${idToken}`
+        }
+      });
+
+      navigate('/dashboard');
+    } catch (err: any) {
+      console.error('Google sign up error:', err);
+      setError(err.response?.data?.message || err.message || 'Google sign up failed');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -139,16 +284,27 @@ const RegisterPage = () => {
           <button
             type="submit"
             style={styles.button}
+            disabled={loading}
             onMouseOver={e => (e.currentTarget.style.background = '#2C64D4')}
             onMouseOut={e => (e.currentTarget.style.background = '#3D7BF2')}
           >
-            Sign Up
+            {loading ? 'Creating Account...' : 'Sign Up'}
           </button>
         </form>
+        {/* Google Sign Up Button */}
+        <button
+          type="button"
+          style={{ ...styles.button, background: '#fff', color: '#222', border: '1px solid #3D7BF2', marginBottom: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+          onClick={handleGoogleSignUp}
+          disabled={loading}
+        >
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style={{ width: 22, height: 22 }} />
+          <span>{loading ? 'Please wait...' : 'Sign Up with Google'}</span>
+        </button>
         {/* Switch to Login */}
         <div style={styles.switchText}>
           Already have an account?{' '}
-          <span style={styles.link} tabIndex={0} role="button">Sign In</span>
+          <span style={styles.link} tabIndex={0} role="button" onClick={() => navigate('/login')}>Sign In</span>
         </div>
       </div>
     </div>
