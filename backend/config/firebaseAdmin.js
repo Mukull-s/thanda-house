@@ -31,10 +31,10 @@ try {
     private_key_length: serviceAccount.private_key ? serviceAccount.private_key.length : 0
   });
 
+  // Initialize Firebase Admin if not already initialized
   if (!admin.apps.length) {
     admin.initializeApp({
-      credential: admin.credential.cert(serviceAccount),
-      projectId: serviceAccount.project_id
+      credential: admin.credential.cert(serviceAccount)
     });
     console.log('Firebase Admin initialized successfully with project:', serviceAccount.project_id);
   } else {
