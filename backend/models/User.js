@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const userSchema = mongoose.Schema(
     {
-        uid: {
+        firebaseUid: {
             type: String,
             required: [true, 'Firebase UID is required'],
             unique: true
