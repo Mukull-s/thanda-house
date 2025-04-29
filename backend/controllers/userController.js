@@ -1,23 +1,18 @@
 const User = require('../models/User');
-const admin = require('firebase-admin');
-
-// Initialize Firebase Admin if not already initialized
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.applicationDefault()
-  });
-}
+const admin = require('../config/firebaseAdmin');
 
 // @desc    Register new user
 // @route   POST /api/users
 // @access  Public
 const registerUser = async (req, res) => {
   try {
+    console.log('Registering user with data:', req.body);
     const { firebaseUid, email, name, phone, address } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({ firebaseUid });
     if (existingUser) {
+      console.log('User already exists:', existingUser);
       return res.status(400).json({ message: 'User already exists' });
     }
 
@@ -29,6 +24,8 @@ const registerUser = async (req, res) => {
       phone,
       address
     });
+
+    console.log('User created successfully:', user);
 
     res.status(201).json({
       message: 'User registered successfully',
@@ -42,7 +39,16 @@ const registerUser = async (req, res) => {
     });
   } catch (error) {
     console.error('Registration error:', error);
-    res.status(500).json({ message: 'Error registering user' });
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ 
+        message: 'Validation error',
+        error: error.message 
+      });
+    }
+    res.status(500).json({ 
+      message: 'Error registering user',
+      error: error.message 
+    });
   }
 };
 
@@ -52,12 +58,16 @@ const registerUser = async (req, res) => {
 const getUserProfile = async (req, res) => {
   try {
     const firebaseUid = req.firebaseUser.uid;
-    const user = await User.findOne({ firebaseUid });
+    console.log('Getting profile for user:', firebaseUid);
     
+    const user = await User.findOne({ firebaseUid });
+
     if (!user) {
+      console.log('User not found:', firebaseUid);
       return res.status(404).json({ message: 'User not found' });
     }
 
+    console.log('Profile found:', user);
     res.json({
       id: user._id,
       email: user.email,
@@ -66,8 +76,11 @@ const getUserProfile = async (req, res) => {
       address: user.address
     });
   } catch (error) {
-    console.error('Profile error:', error);
-    res.status(500).json({ message: 'Error fetching user profile' });
+    console.error('Get profile error:', error);
+    res.status(500).json({ 
+      message: 'Error getting user profile',
+      error: error.message 
+    });
   }
 };
 
