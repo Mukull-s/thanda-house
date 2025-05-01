@@ -1,24 +1,49 @@
 import React, { useState, CSSProperties } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { auth } from '../config/firebase';
+import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({ email: '', password: '' });
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Example error handling
     if (!form.email || !form.password) {
       setError('Please fill in all fields.');
       return;
     }
     setError('');
-    // TODO: Add real authentication logic
-    alert('Logged in!');
+    setLoading(true);
+    try {
+      await signInWithEmailAndPassword(auth, form.email, form.password);
+      navigate('/dashboard');
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setError('');
+    setLoading(true);
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+      navigate('/dashboard');
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -80,16 +105,27 @@ const LoginPage = () => {
           <button
             type="submit"
             style={styles.button}
+            disabled={loading}
             onMouseOver={e => (e.currentTarget.style.background = '#2C64D4')}
             onMouseOut={e => (e.currentTarget.style.background = '#3D7BF2')}
           >
-            Sign In
+            {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
+        {/* Google Sign In Button */}
+        <button
+          type="button"
+          style={{ ...styles.button, background: '#fff', color: '#222', border: '1px solid #3D7BF2', marginBottom: 16, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}
+          onClick={handleGoogleSignIn}
+          disabled={loading}
+        >
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style={{ width: 22, height: 22 }} />
+          <span>{loading ? 'Please wait...' : 'Sign In with Google'}</span>
+        </button>
         {/* Switch to Sign Up */}
         <div style={styles.switchText}>
           Don't have an account?{' '}
-          <span style={styles.link} tabIndex={0} role="button">Sign Up</span>
+          <span style={styles.link} tabIndex={0} role="button" onClick={() => navigate('/register')}>Sign Up</span>
         </div>
       </div>
     </div>
