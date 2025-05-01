@@ -84,7 +84,139 @@ const getUserProfile = async (req, res) => {
   }
 };
 
+// @desc    Update user profile
+// @route   PUT /api/users/profile
+// @access  Private
+const updateUserProfile = async (req, res) => {
+  try {
+    const firebaseUid = req.firebaseUser.uid;
+    const { name, phone, address } = req.body;
+
+    const user = await User.findOne({ firebaseUid });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    user.name = name || user.name;
+    user.phone = phone || user.phone;
+    user.address = address || user.address;
+
+    const updatedUser = await user.save();
+
+    res.json({
+      id: updatedUser._id,
+      email: updatedUser.email,
+      name: updatedUser.name,
+      phone: updatedUser.phone,
+      address: updatedUser.address
+    });
+  } catch (error) {
+    console.error('Update profile error:', error);
+    res.status(500).json({ 
+      message: 'Error updating user profile',
+      error: error.message 
+    });
+  }
+};
+
+// @desc    Get all users
+// @route   GET /api/users
+// @access  Private/Admin
+const getUsers = async (req, res) => {
+  try {
+    const users = await User.find({}).select('-firebaseUid');
+    res.json(users);
+  } catch (error) {
+    console.error('Get users error:', error);
+    res.status(500).json({ 
+      message: 'Error getting users',
+      error: error.message 
+    });
+  }
+};
+
+// @desc    Get user by ID
+// @route   GET /api/users/:id
+// @access  Private/Admin
+const getUserById = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).select('-firebaseUid');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.json(user);
+  } catch (error) {
+    console.error('Get user by ID error:', error);
+    res.status(500).json({ 
+      message: 'Error getting user',
+      error: error.message 
+    });
+  }
+};
+
+// @desc    Update user
+// @route   PUT /api/users/:id
+// @access  Private/Admin
+const updateUser = async (req, res) => {
+  try {
+    const { name, email, phone, address, role } = req.body;
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    user.name = name || user.name;
+    user.email = email || user.email;
+    user.phone = phone || user.phone;
+    user.address = address || user.address;
+    user.role = role || user.role;
+
+    const updatedUser = await user.save();
+    res.json({
+      id: updatedUser._id,
+      email: updatedUser.email,
+      name: updatedUser.name,
+      phone: updatedUser.phone,
+      address: updatedUser.address,
+      role: updatedUser.role
+    });
+  } catch (error) {
+    console.error('Update user error:', error);
+    res.status(500).json({ 
+      message: 'Error updating user',
+      error: error.message 
+    });
+  }
+};
+
+// @desc    Delete user
+// @route   DELETE /api/users/:id
+// @access  Private/Admin
+const deleteUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    await user.deleteOne();
+    res.json({ message: 'User removed' });
+  } catch (error) {
+    console.error('Delete user error:', error);
+    res.status(500).json({ 
+      message: 'Error deleting user',
+      error: error.message 
+    });
+  }
+};
+
 module.exports = {
   registerUser,
-  getUserProfile
+  getUserProfile,
+  updateUserProfile,
+  getUsers,
+  getUserById,
+  updateUser,
+  deleteUser
 }; 

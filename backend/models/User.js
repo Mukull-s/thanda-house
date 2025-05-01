@@ -1,11 +1,21 @@
 const mongoose = require('mongoose');
 
-const userSchema = mongoose.Schema(
+// Drop the existing collection
+mongoose.connection.on('connected', () => {
+    mongoose.connection.db.dropCollection('users', (err) => {
+        if (err) {
+            console.log('Error dropping collection:', err);
+        } else {
+            console.log('Collection dropped successfully');
+        }
+    });
+});
+
+const userSchema = new mongoose.Schema(
     {
         firebaseUid: {
             type: String,
-            required: [true, 'Firebase UID is required'],
-            unique: true
+            required: [true, 'Firebase UID is required']
         },
         name: {
             type: String,
@@ -15,7 +25,6 @@ const userSchema = mongoose.Schema(
         email: {
             type: String,
             required: [true, 'Please add an email'],
-            unique: true,
             trim: true,
             match: [
                 /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
@@ -28,8 +37,7 @@ const userSchema = mongoose.Schema(
             default: 'user'
         },
         phone: {
-            type: String,
-            unique: true
+            type: String
         },
         address: {
             street: String,
@@ -42,5 +50,9 @@ const userSchema = mongoose.Schema(
         timestamps: true
     }
 );
+
+// Create indexes explicitly
+userSchema.index({ firebaseUid: 1 }, { unique: true });
+userSchema.index({ email: 1 }, { unique: true });
 
 module.exports = mongoose.model('User', userSchema); 
