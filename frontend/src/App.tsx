@@ -3,23 +3,15 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Dashboard from './components/Dashboard';
 import AgeVerification from './components/AgeVerification';
-import { UserProvider, useUser } from './UserContext';
-import { useEffect, useState } from 'react';
+import { UserProvider } from './UserContext';
+import { useState } from 'react';
 
 import './App.css'
 
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user, loading } = useUser();
-  const [isAgeVerified] = useState(() => localStorage.getItem('ageVerified') === 'true');
-
-  if (loading) return null; // or a loading spinner
-  if (!isAgeVerified) return <Navigate to="/" replace />;
-  if (!user) return <Navigate to="/login" replace />;
-  return <>{children}</>;
-};
-
 const AgeProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const [isAgeVerified] = useState(() => localStorage.getItem('ageVerified') === 'true');
+  const [isAgeVerified] = useState(() => {
+    return localStorage.getItem('ageVerified') === 'true' || sessionStorage.getItem('ageVerified') === 'true';
+  });
   
   if (!isAgeVerified) {
     return <Navigate to="/" replace />;
@@ -56,9 +48,9 @@ function App() {
           <Route
             path="/dashboard"
             element={
-              <ProtectedRoute>
+              <AgeProtectedRoute>
                 <Dashboard />
-              </ProtectedRoute>
+              </AgeProtectedRoute>
             }
           />
           
