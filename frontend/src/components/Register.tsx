@@ -126,7 +126,7 @@ const RegisterPage = () => {
         console.log('Server response:', response.status, response.data);
 
         if (response.status === 201) {
-          navigate('/dashboard');
+          navigate('/home');
         } else {
           console.error('Server response:', response.data);
           throw new Error(response.data.message || 'Failed to create user profile');
@@ -179,7 +179,7 @@ const RegisterPage = () => {
         }
       });
 
-      navigate('/dashboard');
+      navigate('/home');
     } catch (err: any) {
       console.error('Google sign up error:', err);
       setError(err.response?.data?.message || err.message || 'Google sign up failed');
@@ -427,18 +427,5 @@ const styles: { [key: string]: CSSProperties } = {
     fontFamily: "'Poppins', sans-serif",
   },
 };
-
-// Add fade-in animation
-const fadeInAnimation = `
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}`;
-if (typeof window !== 'undefined' && !document.getElementById('fadeInAnim')) {
-  const styleTag = document.createElement('style');
-  styleTag.id = 'fadeInAnim';
-  styleTag.innerHTML = fadeInAnimation;
-  document.head.appendChild(styleTag);
-}
 
 export default RegisterPage;

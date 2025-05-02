@@ -14,7 +14,7 @@ const AgeVerification: React.FC = () => {
       } else {
         sessionStorage.setItem('ageVerified', 'true');
       }
-      navigate('/dashboard');
+      navigate('/home');
     } else {
       window.location.href = 'https://www.google.com';
     }

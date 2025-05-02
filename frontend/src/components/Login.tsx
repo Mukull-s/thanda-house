@@ -24,7 +24,7 @@ const LoginPage = () => {
     setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, form.email, form.password);
-      navigate('/dashboard');
+      navigate('/home');
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -38,7 +38,7 @@ const LoginPage = () => {
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
-      navigate('/dashboard');
+      navigate('/home');
     } catch (err: any) {
       setError(err.message);
     } finally {
