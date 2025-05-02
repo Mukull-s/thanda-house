@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Login';
 import Register from './components/Register';
-import Dashboard from './components/Dashboard';
+import Home from './components/Home';
 import AgeVerification from './components/AgeVerification';
 import { UserProvider } from './UserContext';
 import { useState } from 'react';
@@ -9,14 +9,10 @@ import { useState } from 'react';
 import './App.css'
 
 const AgeProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const [isAgeVerified] = useState(() => {
-    return localStorage.getItem('ageVerified') === 'true' || sessionStorage.getItem('ageVerified') === 'true';
-  });
-  
+  const isAgeVerified = localStorage.getItem('ageVerified') === 'true' || sessionStorage.getItem('ageVerified') === 'true';
   if (!isAgeVerified) {
     return <Navigate to="/" replace />;
   }
-  
   return <>{children}</>;
 };
 
@@ -25,10 +21,7 @@ function App() {
     <UserProvider>
       <Router>
         <Routes>
-          {/* Age verification is the default route */}
           <Route path="/" element={<AgeVerification />} />
-          
-          {/* These routes require age verification */}
           <Route 
             path="/login" 
             element={
@@ -46,15 +39,13 @@ function App() {
             } 
           />
           <Route
-            path="/dashboard"
+            path="/home"
             element={
               <AgeProtectedRoute>
-                <Dashboard />
+                <Home />
               </AgeProtectedRoute>
             }
           />
-          
-          {/* Catch all other routes and redirect to age verification */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Router>
