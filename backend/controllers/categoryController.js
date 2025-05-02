@@ -1,11 +1,12 @@
 const Category = require('../models/Category');
 const Product = require('../models/Product');
 const cloudinary = require('cloudinary').v2;
+const { AppError } = require('../utils/errorHandler');
 
 // @desc    Get all categories
 // @route   GET /api/categories
 // @access  Public
-const getCategories = async (req, res) => {
+const getCategories = async (req, res, next) => {
   try {
     const { featured, active, parent } = req.query;
     
@@ -19,37 +20,41 @@ const getCategories = async (req, res) => {
       .sort({ displayOrder: 1, name: 1 })
       .populate('parentCategory', 'name');
 
-    res.status(200).json(categories);
+    res.json({
+      success: true,
+      data: categories
+    });
   } catch (error) {
-    console.error('Error getting categories:', error);
-    res.status(500).json({ message: 'Server error' });
+    next(error);
   }
 };
 
 // @desc    Get single category
 // @route   GET /api/categories/:id
 // @access  Public
-const getCategoryById = async (req, res) => {
+const getCategoryById = async (req, res, next) => {
   try {
     const category = await Category.findById(req.params.id)
       .populate('parentCategory', 'name')
       .populate('products', 'name price image');
 
     if (!category) {
-      return res.status(404).json({ message: 'Category not found' });
+      throw new AppError('Category not found', 404);
     }
 
-    res.status(200).json(category);
+    res.json({
+      success: true,
+      data: category
+    });
   } catch (error) {
-    console.error('Error getting category:', error);
-    res.status(500).json({ message: 'Server error' });
+    next(error);
   }
 };
 
 // @desc    Create category
 // @route   POST /api/categories
 // @access  Private/Admin
-const createCategory = async (req, res) => {
+const createCategory = async (req, res, next) => {
   try {
     // Upload image to Cloudinary
     const result = await cloudinary.uploader.upload(req.body.image, {
@@ -66,22 +71,24 @@ const createCategory = async (req, res) => {
       }
     });
 
-    res.status(201).json(category);
+    res.status(201).json({
+      success: true,
+      data: category
+    });
   } catch (error) {
-    console.error('Error creating category:', error);
-    res.status(400).json({ message: error.message });
+    next(error);
   }
 };
 
 // @desc    Update category
 // @route   PUT /api/categories/:id
 // @access  Private/Admin
-const updateCategory = async (req, res) => {
+const updateCategory = async (req, res, next) => {
   try {
     let category = await Category.findById(req.params.id);
     
     if (!category) {
-      return res.status(404).json({ message: 'Category not found' });
+      throw new AppError('Category not found', 404);
     }
 
     // If new image is provided, upload to Cloudinary and delete old one
@@ -107,54 +114,55 @@ const updateCategory = async (req, res) => {
       runValidators: true
     });
 
-    res.status(200).json(category);
+    res.json({
+      success: true,
+      data: category
+    });
   } catch (error) {
-    console.error('Error updating category:', error);
-    res.status(400).json({ message: error.message });
+    next(error);
   }
 };
 
 // @desc    Delete category
 // @route   DELETE /api/categories/:id
 // @access  Private/Admin
-const deleteCategory = async (req, res) => {
+const deleteCategory = async (req, res, next) => {
   try {
     const category = await Category.findById(req.params.id);
     
     if (!category) {
-      return res.status(404).json({ message: 'Category not found' });
+      throw new AppError('Category not found', 404);
     }
 
     // Check if category has products
     const products = await Product.find({ category: category._id });
     if (products.length > 0) {
-      return res.status(400).json({ 
-        message: 'Cannot delete category with products',
-        productsCount: products.length
-      });
+      throw new AppError('Cannot delete category with products', 400);
     }
 
     // Delete image from Cloudinary
     await cloudinary.uploader.destroy(category.image.public_id);
 
-    await category.remove();
-    res.status(200).json({ message: 'Category deleted' });
+    await category.deleteOne();
+    res.json({
+      success: true,
+      data: null
+    });
   } catch (error) {
-    console.error('Error deleting category:', error);
-    res.status(500).json({ message: 'Server error' });
+    next(error);
   }
 };
 
 // @desc    Get category products
 // @route   GET /api/categories/:id/products
 // @access  Public
-const getCategoryProducts = async (req, res) => {
+const getCategoryProducts = async (req, res, next) => {
   try {
     const { sort, limit = 10, page = 1 } = req.query;
     
     const category = await Category.findById(req.params.id);
     if (!category) {
-      return res.status(404).json({ message: 'Category not found' });
+      throw new AppError('Category not found', 404);
     }
 
     // Build sort
@@ -171,16 +179,18 @@ const getCategoryProducts = async (req, res) => {
 
     const count = await Product.countDocuments({ category: category._id });
 
-    res.status(200).json({
-      category: category.name,
-      count,
-      totalPages: Math.ceil(count / limit),
-      currentPage: page,
-      products
+    res.json({
+      success: true,
+      data: {
+        category: category.name,
+        count,
+        totalPages: Math.ceil(count / limit),
+        currentPage: page,
+        products
+      }
     });
   } catch (error) {
-    console.error('Error getting category products:', error);
-    res.status(500).json({ message: 'Server error' });
+    next(error);
   }
 };
 

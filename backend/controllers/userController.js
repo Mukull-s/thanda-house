@@ -1,19 +1,18 @@
 const User = require('../models/User');
 const admin = require('../config/firebaseAdmin');
+const { AppError } = require('../utils/errorHandler');
 
 // @desc    Register new user
 // @route   POST /api/users
 // @access  Public
-const registerUser = async (req, res) => {
+const registerUser = async (req, res, next) => {
   try {
-    console.log('Registering user with data:', req.body);
     const { firebaseUid, email, name, phone, address } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findOne({ firebaseUid });
     if (existingUser) {
-      console.log('User already exists:', existingUser);
-      return res.status(400).json({ message: 'User already exists' });
+      throw new AppError('User already exists', 400);
     }
 
     // Create new user
@@ -25,11 +24,9 @@ const registerUser = async (req, res) => {
       address
     });
 
-    console.log('User created successfully:', user);
-
     res.status(201).json({
-      message: 'User registered successfully',
-      user: {
+      success: true,
+      data: {
         id: user._id,
         email: user.email,
         name: user.name,
@@ -38,63 +35,48 @@ const registerUser = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Registration error:', error);
-    if (error.name === 'ValidationError') {
-      return res.status(400).json({ 
-        message: 'Validation error',
-        error: error.message 
-      });
-    }
-    res.status(500).json({ 
-      message: 'Error registering user',
-      error: error.message 
-    });
+    next(error);
   }
 };
 
 // @desc    Get user profile
 // @route   GET /api/users/profile
 // @access  Private
-const getUserProfile = async (req, res) => {
+const getUserProfile = async (req, res, next) => {
   try {
     const firebaseUid = req.firebaseUser.uid;
-    console.log('Getting profile for user:', firebaseUid);
-    
     const user = await User.findOne({ firebaseUid });
 
     if (!user) {
-      console.log('User not found:', firebaseUid);
-      return res.status(404).json({ message: 'User not found' });
+      throw new AppError('User not found', 404);
     }
 
-    console.log('Profile found:', user);
     res.json({
-      id: user._id,
-      email: user.email,
-      name: user.name,
-      phone: user.phone,
-      address: user.address
+      success: true,
+      data: {
+        id: user._id,
+        email: user.email,
+        name: user.name,
+        phone: user.phone,
+        address: user.address
+      }
     });
   } catch (error) {
-    console.error('Get profile error:', error);
-    res.status(500).json({ 
-      message: 'Error getting user profile',
-      error: error.message 
-    });
+    next(error);
   }
 };
 
 // @desc    Update user profile
 // @route   PUT /api/users/profile
 // @access  Private
-const updateUserProfile = async (req, res) => {
+const updateUserProfile = async (req, res, next) => {
   try {
     const firebaseUid = req.firebaseUser.uid;
     const { name, phone, address } = req.body;
 
     const user = await User.findOne({ firebaseUid });
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      throw new AppError('User not found', 404);
     }
 
     user.name = name || user.name;
@@ -104,66 +86,63 @@ const updateUserProfile = async (req, res) => {
     const updatedUser = await user.save();
 
     res.json({
-      id: updatedUser._id,
-      email: updatedUser.email,
-      name: updatedUser.name,
-      phone: updatedUser.phone,
-      address: updatedUser.address
+      success: true,
+      data: {
+        id: updatedUser._id,
+        email: updatedUser.email,
+        name: updatedUser.name,
+        phone: updatedUser.phone,
+        address: updatedUser.address
+      }
     });
   } catch (error) {
-    console.error('Update profile error:', error);
-    res.status(500).json({ 
-      message: 'Error updating user profile',
-      error: error.message 
-    });
+    next(error);
   }
 };
 
 // @desc    Get all users
 // @route   GET /api/users
 // @access  Private/Admin
-const getUsers = async (req, res) => {
+const getUsers = async (req, res, next) => {
   try {
     const users = await User.find({}).select('-firebaseUid');
-    res.json(users);
-  } catch (error) {
-    console.error('Get users error:', error);
-    res.status(500).json({ 
-      message: 'Error getting users',
-      error: error.message 
+    res.json({
+      success: true,
+      data: users
     });
+  } catch (error) {
+    next(error);
   }
 };
 
 // @desc    Get user by ID
 // @route   GET /api/users/:id
 // @access  Private/Admin
-const getUserById = async (req, res) => {
+const getUserById = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id).select('-firebaseUid');
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      throw new AppError('User not found', 404);
     }
-    res.json(user);
-  } catch (error) {
-    console.error('Get user by ID error:', error);
-    res.status(500).json({ 
-      message: 'Error getting user',
-      error: error.message 
+    res.json({
+      success: true,
+      data: user
     });
+  } catch (error) {
+    next(error);
   }
 };
 
 // @desc    Update user
 // @route   PUT /api/users/:id
 // @access  Private/Admin
-const updateUser = async (req, res) => {
+const updateUser = async (req, res, next) => {
   try {
     const { name, email, phone, address, role } = req.body;
     const user = await User.findById(req.params.id);
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      throw new AppError('User not found', 404);
     }
 
     user.name = name || user.name;
@@ -174,40 +153,38 @@ const updateUser = async (req, res) => {
 
     const updatedUser = await user.save();
     res.json({
-      id: updatedUser._id,
-      email: updatedUser.email,
-      name: updatedUser.name,
-      phone: updatedUser.phone,
-      address: updatedUser.address,
-      role: updatedUser.role
+      success: true,
+      data: {
+        id: updatedUser._id,
+        email: updatedUser.email,
+        name: updatedUser.name,
+        phone: updatedUser.phone,
+        address: updatedUser.address,
+        role: updatedUser.role
+      }
     });
   } catch (error) {
-    console.error('Update user error:', error);
-    res.status(500).json({ 
-      message: 'Error updating user',
-      error: error.message 
-    });
+    next(error);
   }
 };
 
 // @desc    Delete user
 // @route   DELETE /api/users/:id
 // @access  Private/Admin
-const deleteUser = async (req, res) => {
+const deleteUser = async (req, res, next) => {
   try {
     const user = await User.findById(req.params.id);
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      throw new AppError('User not found', 404);
     }
 
     await user.deleteOne();
-    res.json({ message: 'User removed' });
-  } catch (error) {
-    console.error('Delete user error:', error);
-    res.status(500).json({ 
-      message: 'Error deleting user',
-      error: error.message 
+    res.json({
+      success: true,
+      data: null
     });
+  } catch (error) {
+    next(error);
   }
 };
 
