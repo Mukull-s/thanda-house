@@ -1,46 +1,128 @@
 import React from 'react';
+import { Search, ShoppingBag } from 'lucide-react';
+import '../styles/CartPage.css';
+import bottleImg from '../assets/bottle.png';
+import canImg from '../assets/Single can.png';
 
-const navLinkClass =
-  "font-bold text-[16px] leading-5 text-black no-underline hover:text-black focus:text-black transition-colors";
-
-const CartPage: React.FC = () => {
+const CartPage = () => {
   return (
-    <div className="min-h-screen w-full" style={{ backgroundColor: '#F4E3BF', margin: 0, padding: 0 }}>
+    <div className="cart-page">
       {/* Navbar */}
-      <nav
-        className="w-full flex flex-row items-center px-8 py-3 relative"
-        style={{ fontFamily: 'Montserrat, sans-serif', height: 58 }}
-      >
-        {/* Left links - fixed width, horizontal row */}
-        <div className="flex flex-row items-center gap-8 min-w-[400px] justify-start">
-          <a href="#" className={navLinkClass}>Home</a>
-          <a href="#" className={navLinkClass}>Shop</a>
-          <a href="#" className={navLinkClass}>About</a>
-          <a href="#" className={navLinkClass}>Contact us</a>
+      <nav className="navbar">
+        {/* Left links */}
+        <div className="navbar-left">
+          <a href="#" className="nav-link">Home</a>
+          <a href="#" className="nav-link">Shop</a>
+          <a href="#" className="nav-link">About</a>
+          <a href="#" className="nav-link">Contact us</a>
         </div>
-        {/* Center logo - absolutely centered, not affected by left/right */}
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
-          <img src="/logo-placeholder.png" alt="Logo" className="h-10 object-contain" style={{ maxWidth: 120 }} />
+
+        {/* Center logo */}
+        <div className="navbar-center">
+          <img
+            src="/logo.png"
+            alt="Logo"
+            className="logo"
+          />
         </div>
-        {/* Right icons and buttons - fixed width, right-aligned */}
-        <div className="flex flex-row items-center gap-4 min-w-[400px] justify-end">
-          {/* Search icon SVG */}
-          <button className="p-0 bg-transparent border-none"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-search"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
-          {/* Cart icon SVG */}
-          <button className="p-0 bg-transparent border-none"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="#000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="feather feather-shopping-bag"><path d="M6 2l1.5 2h9L18 2"/><path d="M3 6h18v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6z"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></button>
+
+        {/* Right icons & buttons */}
+        <div className="navbar-right">
+          {/* Search icon */}
+          <Search className="icon" />
+          {/* Cart icon */}
+          <ShoppingBag className="icon" />
           {/* Get Thanda button */}
-          <button className="bg-[#6B1A1A] text-white px-5 py-1.5 rounded-full font-bold text-[16px]" style={{ fontFamily: 'inherit' }}>Get Thanda</button>
-          {/* Signup/Login */}
-          <a href="#" className={navLinkClass}>Signup/Login</a>
+          <button className="get-thanda-button">
+            Get Thanda
+          </button>
+          {/* Signup/Login link */}
+          <a href="#" className="nav-link">Signup/Login</a>
         </div>
       </nav>
-      {/* Page Content Placeholder */}
-      <div className="p-4 mt-8">
-        <h1 className="text-2xl font-bold text-black">Cart Page</h1>
-        <p className="text-black">This is the cart page content</p>
-      </div>
+
+      {/* Main Content */}
+      <main className="cart-main">
+        <h1 className="cart-title">My Cart</h1>
+        <div className="cart-content">
+          <section className="cart-items">
+            {/* Cart Item 1 */}
+            <div className="cart-item">
+              <img src={bottleImg} alt="Thanda House Extreme Gold" className="cart-item-img" />
+              <div className="cart-item-details">
+                <div className="cart-item-name">Thanda House Extreme Gold</div>
+                <div className="cart-item-info">
+                  <div className="cart-item-qty-row">
+                    <span className="cart-item-label">Quantity</span>
+                    <button className="cart-qty-btn">-</button>
+                    <span className="cart-qty">1</span>
+                    <button className="cart-qty-btn">+</button>
+                  </div>
+                  <div className="cart-item-price-row">
+                    <span className="cart-item-label">Price</span>
+                    <span className="cart-item-price">$200</span>
+                  </div>
+                  <button className="cart-item-remove">Remove</button>
+                </div>
+              </div>
+            </div>
+            {/* Cart Item 2 */}
+            <div className="cart-item">
+              <img src={bottleImg} alt="Thanda House Extreme Black" className="cart-item-img" />
+              <div className="cart-item-details">
+                <div className="cart-item-name">Thanda House Extreme Black</div>
+                <div className="cart-item-info">
+                  <div className="cart-item-qty-row">
+                    <span className="cart-item-label">Quantity</span>
+                    <button className="cart-qty-btn">-</button>
+                    <span className="cart-qty">1</span>
+                    <button className="cart-qty-btn">+</button>
+                  </div>
+                  <div className="cart-item-price-row">
+                    <span className="cart-item-label">Price</span>
+                    <span className="cart-item-price">$400</span>
+                  </div>
+                  <button className="cart-item-remove">Remove</button>
+                </div>
+              </div>
+            </div>
+          </section>
+          {/* Order Summary */}
+          <aside className="order-summary">
+            <div className="order-summary-title">Order Summary</div>
+            <div className="order-summary-row">
+              <span>subtotal</span>
+              <span>$600</span>
+            </div>
+            <div className="order-summary-row">
+              <span>Tax (5%)</span>
+              <span>$30</span>
+            </div>
+            <div className="order-summary-row order-summary-total">
+              <span>Total :</span>
+              <span>$630</span>
+            </div>
+            <div className="order-summary-row">
+              <span>Apply Coupon</span>
+              <input className="order-summary-coupon" value="BEER20" readOnly />
+            </div>
+            <button className="order-summary-checkout">Checkout Securely</button>
+          </aside>
+        </div>
+        {/* You may also like */}
+        <section className="cart-recommend">
+          <div className="cart-recommend-title">You may also like</div>
+          <div className="cart-recommend-list">
+            <img src={canImg} alt="Thanda House Premium Beer" className="cart-recommend-img" />
+            <img src={canImg} alt="Thanda House Premium Beer" className="cart-recommend-img" />
+            <img src={canImg} alt="Thanda House Premium Beer" className="cart-recommend-img" />
+            <img src={canImg} alt="Thanda House Premium Beer" className="cart-recommend-img" />
+            <img src={canImg} alt="Thanda House Premium Beer" className="cart-recommend-img" />
+          </div>
+        </section>
+      </main>
     </div>
   );
 };
 
-export default CartPage; 
+export default CartPage;
