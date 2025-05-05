@@ -11,9 +11,12 @@
   },
   "dependencies": {
     "@firebase/auth": "^1.10.1",
+    "@types/locomotive-scroll": "^4.1.4",
     "@types/react-router-dom": "^5.3.3",
     "axios": "^1.9.0",
     "firebase": "^11.6.1",
+    "gsap": "^3.13.0",
+    "locomotive-scroll": "^4.1.4",
     "lucide-react": "^0.506.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -31,7 +34,7 @@
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^16.0.0",
     "postcss": "^8.5.3",
-    "tailwindcss": "^4.1.4",
+    "tailwindcss": "^4.1.5",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.26.1",
     "vite": "^6.3.1"
