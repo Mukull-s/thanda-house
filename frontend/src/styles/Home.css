@@ -1,98 +1,312 @@
-.home-page {
-  position: relative;
-  width: 100vw;
-  margin: 0 auto;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  background-color: #F4E3BF;
-  box-sizing: border-box;
-  overflow: visible;
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=satoshi@300,400,700&display=swap');
+
+@font-face {
+  font-family: 'Bryson Personal Use Only';
+  src: url('/BrysonPersonalUseOnly.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
 }
 
 .navbar {
-  width: 100%;
+  width: 100vw;
+  height: 56px;
+  background: #F4E3BF;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 24px;
-  border-bottom: 1px solid #bfae8a;
-  height: 56px;
   font-family: 'Montserrat', sans-serif;
+  padding: 0 32px;
   box-sizing: border-box;
 }
 
-.navbar-left {
+.navbar-left, .navbar-right {
   display: flex;
   align-items: center;
-  gap: 32px;
-  flex: 1;
+  gap: 24px;
 }
 
 .navbar-center {
+  flex: 1;
   display: flex;
   justify-content: center;
-  flex: 1;
+  align-items: center;
 }
 
-.navbar-right {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  justify-content: flex-end;
-  flex: 1;
+.navbar-logo {
+  height: 40px;
+  object-fit: contain;
 }
 
 .nav-link {
-  font-family: 'Montserrat', sans-serif;
-  font-weight: bold;
-  font-size: 16px;
-  line-height: 20px;
-  color: black;
+  color: #000;
   text-decoration: none;
-  transition: color 0.3s ease;
+  font-weight: 600;
+  font-size: 16px;
+  transition: color 0.2s;
 }
 
-.nav-link:hover,
-.nav-link:focus {
-  color: black;
+.nav-link.active, .nav-link:focus, .nav-link:hover {
+  font-weight: 700;
 }
 
-.logo {
-  height: 32px;
-  max-width: 100px;
-  object-fit: contain;
-  margin-top: 2px;
+.get-thanda-btn {
+  background: #7B0000;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 20px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  margin: 0 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.get-thanda-btn:hover {
+  background: #a30000;
+}
+
+.nav-icon {
+  width: 22px;
+  height: 22px;
+  color: #000;
+  margin: 0 8px;
+  cursor: pointer;
+}
+
+.login-link {
+  font-size: 15px;
+  font-weight: 600;
+  margin-left: 8px;
+}
+
+@media (max-width: 900px) {
+  .navbar {
+    flex-direction: column;
+    height: auto;
+    padding: 12px;
+  }
+  .navbar-center {
+    margin: 8px 0;
+  }
+}
+
+.home-background {
+  min-height: 100vh;
+  width: 100vw;
+  max-width: 100vw;
+  background: linear-gradient(360deg, #FFFFFF 0%, #F4E3BF 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 32px;
+}
+
+.home-logo-section {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin-bottom: 2px;
 }
 
-.icon {
-  color: black;
-  cursor: pointer;
-  width: 20px;
-  height: 20px;
+.home-main-logo {
+  width: 220px;
+  max-width: 90vw;
+  height: auto;
+  margin-bottom: 18px;
 }
 
-.get-thanda-button {
-  background-color: #7B0000;
-  color: white;
-  font-weight: bold;
-  padding: 8px 16px;
-  border-radius: 9999px;
-  font-size: 14px;
+.home-beers-section {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.home-beers-img {
+  width: 900px;
+  max-width: 98vw;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+@media (max-width: 700px) {
+  .home-main-logo {
+    width: 140px;
+  }
+  .home-beers-img {
+    width: 98vw;
+  }
+}
+
+.hero-section {
+  position: relative;
+  width: 100vw;
+  min-height: 520px;
+  margin-top: 60px;
+  margin-bottom: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+}
+
+.hero-bottle {
+  position: absolute;
+  top: 0;
+  width: 260px;
+  max-width: 30vw;
+  z-index: 1;
+  filter: drop-shadow(0 6px 18px rgba(0,0,0,0.18));
+}
+.hero-bottle-left {
+  left: 0;
+  transform: rotate(-25deg) translateY(30px);
+}
+.hero-bottle-right {
+  right: 0;
+  transform: rotate(20deg) translateY(30px);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-heading {
+  font-family: 'Bryson Personal Use Only', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  color: #282D1D;
+  font-size: 3.2rem;
+  margin-bottom: 18px;
+  margin-top: 0;
+  line-height: 1.1;
+  text-shadow: 7px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.hero-subheading {
+  font-family: 'Satoshi', Arial, sans-serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 32px;
+  letter-spacing: 0.02em;
+  color: #000000;
+  margin-bottom: 32px;
+  margin-top: 0;
+}
+
+.hero-btn {
+  background: linear-gradient(90deg, #B9935A 0%, #7B5E2E 100%);
+  color: #fff;
   border: none;
+  border-radius: 24px;
+  padding: 12px 32px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 32px;
+  box-shadow: 0 2px 8px rgba(61, 123, 242, 0.10);
   cursor: pointer;
+  transition: background 0.2s;
+}
+.hero-btn:hover {
+  background: linear-gradient(90deg, #7b5e2e 0%, #b9935a 100%);
 }
 
-/* Add these styles to match AgeVerification page's body and root settings */
-body {
-  margin: 0;
-  padding: 0;
-  background: none;
+.hero-stats {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 0;
+  margin: 32px 0 18px 0;
+  flex-wrap: nowrap;
+  width: 100%;
+}
+.hero-stat {
+  font-family: 'Satoshi', Arial, sans-serif;
+  font-size: 20px;
+  color: #888;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-style: italic;
+  font-weight: 400;
+  padding: 0 18px;
+  white-space: nowrap;
+}
+.stat-icon {
+  width: 28px;
+  height: 28px;
+  margin-right: 6px;
+}
+.stat-divider {
+  width: 1px;
+  height: 28px;
+  background: #888;
+  opacity: 0.5;
+  margin: 0 8px;
 }
 
-#root {
-  max-width: 100vw !important;
-  margin: 0 !important;
-  padding: 0 !important;
-} 
+.hero-why {
+  margin-bottom: 18px;
+}
+.hero-why-link {
+  color: #7b5e2e;
+  font-weight: 700;
+  text-decoration: underline;
+  font-size: 1.08rem;
+  transition: color 0.2s;
+}
+.hero-why-link:hover {
+  color: #b9935a;
+}
+
+@media (max-width: 900px) {
+  .hero-bottle {
+    width: 120px;
+    max-width: 30vw;
+  }
+  .hero-content {
+    max-width: 98vw;
+  }
+  .hero-heading {
+    font-size: 2.1rem;
+  }
+  .hero-section {
+    min-height: 340px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+  .hero-stats {
+    gap: 0;
+    font-size: 0.95rem;
+    flex-wrap: wrap;
+  }
+  .hero-stat {
+    font-size: 15px;
+    padding: 0 8px;
+  }
+  .stat-icon {
+    width: 18px;
+    height: 18px;
+  }
+  .stat-divider {
+    height: 18px;
+    margin: 0 4px;
+  }
+}
