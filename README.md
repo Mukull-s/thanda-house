@@ -25,7 +25,7 @@ Currently in design and development phase.
 Wireframing and UI/UX planning is in progress.
 
 
-'''
+```
 thanda-house-backend/
 ├── config/ # DB connection, cloudinary config, payment gateway keys
 │ ├── db.js
@@ -60,7 +60,7 @@ thanda-house-backend/
 ├── .env # Environment variables
 ├── server.js # Entry point
 └── package.json # NPM scripts and packages
-'''
+```
 
 > 🍺 Built with love, design, and code by [Mukul Singhal]
 
