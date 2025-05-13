@@ -26,6 +26,34 @@ Wireframing and UI/UX planning is in progress.
 
 
 ```
+Thanda-House-frontend
+thanda-house-frontend/
+├── public/                      # Static assets (favicon, images, manifest, etc.)
+│   └── images/                  # Publicly accessible images
+├── src/                         # Main source code
+│   ├── assets/                  # Local image, font, video, or SVG assets
+│   ├── components/              # Reusable UI components (Button, Card, etc.)
+│   ├── config/                  # Global configs (Firebase, themes, env)
+│   ├── constants/               # App-wide constants (routes, labels, etc.)
+│   ├── hooks/                   # Custom React hooks
+│   ├── layouts/                 # Reusable layout components (Navbar, Footer)
+│   ├── pages/                   # Route-based pages (Home, About, Register, etc.)
+│   ├── routes/                  # React Router or navigation setup
+│   ├── services/                # API interaction logic (Axios instances, endpoints)
+│   ├── store/                   # Global state management (Redux, Zustand, etc.)
+│   ├── styles/                  # Global styles, themes, Tailwind or CSS modules
+│   ├── utils/                   # Utility functions (formatting, validators, etc.)
+│   ├── App.tsx                  # Root component
+│   └── main.tsx                 # React app entry point
+├── .env                         # Environment variables
+├── tailwind.config.js           # Tailwind CSS configuration (if using Tailwind)
+├── vite.config.ts               # Vite configuration (if using Vite)
+├── package.json
+└── README.md
+```
+
+
+```
 thanda-house-backend/
 ├── config/ # DB connection, cloudinary config, payment gateway keys
 │ ├── db.js
