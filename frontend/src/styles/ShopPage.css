@@ -1,0 +1,83 @@
+.shop-page-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: 'Montserrat', sans-serif;
+  background-color: #f9f9f9; /* Light background for the page */
+}
+
+.shop-page-title {
+  text-align: center;
+  font-size: 2.5rem;
+  color: #333;
+  margin-bottom: 40px;
+  font-weight: 700;
+}
+
+.product-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Center cards if they don't fill the row */
+  gap: 16px; /* Spacing between cards */
+}
+
+.shop-page-message {
+  text-align: center;
+  font-size: 1.2rem;
+  padding: 40px;
+  color: #555;
+}
+
+.shop-page-message.error {
+  color: #D8000C; /* Error color */
+  background-color: #FFD2D2; /* Light red background for error */
+  border: 1px solid #D8000C;
+  border-radius: 8px;
+}
+
+/* Responsive adjustments if needed */
+@media (max-width: 768px) {
+  .shop-page-title {
+    font-size: 2rem;
+  }
+  .product-grid {
+    justify-content: space-around; /* Better for fewer items per row */
+  }
+}
+
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+  padding: 10px;
+  gap: 10px;
+}
+
+.pagination-controls button {
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.pagination-controls button:hover:not(:disabled) {
+  background-color: #7B0000;
+  color: #fff;
+  border-color: #7B0000;
+}
+
+.pagination-controls button:disabled {
+  background-color: #f0f0f0;
+  color: #aaa;
+  cursor: not-allowed;
+  border-color: #e0e0e0;
+}
+
+.pagination-controls span {
+  font-size: 1rem;
+  color: #555;
+} 

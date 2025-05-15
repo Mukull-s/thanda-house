@@ -7,10 +7,10 @@ const Home: React.FC = () => {
     <>
       <nav className="navbar">
         <div className="navbar-left">
-          <a href="#" className="nav-link active">Home</a>
-          <a href="#" className="nav-link">Shop</a>
-          <a href="#" className="nav-link">About</a>
-          <a href="#" className="nav-link">Contact us</a>
+          <a href="/" className="nav-link">Home</a>
+          <a href="/shop" className="nav-link">Shop</a>
+          <a href="/about" className="nav-link">About</a>
+          <a href="/contact" className="nav-link">Contact us</a>
         </div>
         <div className="navbar-center">
           <img src="/logo.png" alt="Thanda House Logo" className="navbar-logo" />
