@@ -5,6 +5,7 @@ import Home from './components/Home';
 import AgeVerification from './components/AgeVerification';
 import CartPage from './components/CartPage';
 import ShopPage from './components/ShopPage';
+import ProductDetail from './components/ProductDetail';
 import { UserProvider } from './UserContext';
 import { useState } from 'react';
 
@@ -61,6 +62,14 @@ function App() {
             element={
               <AgeProtectedRoute>
                 <ShopPage />
+              </AgeProtectedRoute>
+            }
+          />
+          <Route 
+            path="/shop/:id" 
+            element={
+              <AgeProtectedRoute>
+                <ProductDetail />
               </AgeProtectedRoute>
             }
           />
