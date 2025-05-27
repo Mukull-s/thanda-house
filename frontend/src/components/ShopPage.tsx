@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Product, getAllProducts } from '../services/productService';
 import ProductCard from './ProductCard';
+import Navbar from './Navbar';
 import '../styles/ShopPage.css';
 
 const ShopPage: React.FC = () => {
@@ -56,27 +57,30 @@ const ShopPage: React.FC = () => {
   }
 
   return (
-    <div className="shop-page-container">
-      <h1 className="shop-page-title">Our Products</h1>
-      <p>Discover a world of refreshing flavors, crafted to chill, perfect for every mood and moment."Let me know if you want a more playful, premium, or bold tone!</p>
-      {/* Add filtering/sorting controls here if desired */}
-      <div className="product-grid">
-        {Array.isArray(products) && products.map(product => (
-          <ProductCard key={product._id} product={product} />
-        ))}
-      </div>
-      {totalPages > 1 && (
-        <div className="pagination-controls">
-          <button onClick={handlePrevPage} disabled={currentPage === 1}>
-            Previous
-          </button>
-          <span>Page {currentPage} of {totalPages}</span>
-          <button onClick={handleNextPage} disabled={currentPage === totalPages}>
-            Next
-          </button>
+    <>
+      <Navbar />
+      <div className="shop-page-container">
+        <h1 className="shop-page-title">Our Products</h1>
+        <p className="description">Discover a world of refreshing flavors, crafted to chill, perfect for every mood and moment."Let me know if you want a more playful, premium, or bold tone!</p>
+        {/* Add filtering/sorting controls here if desired */}
+        <div className="product-grid">
+          {Array.isArray(products) && products.map(product => (
+            <ProductCard key={product._id} product={product} />
+          ))}
         </div>
-      )}
-    </div>
+        {totalPages > 1 && (
+          <div className="pagination-controls">
+            <button onClick={handlePrevPage} disabled={currentPage === 1}>
+              Previous
+            </button>
+            <span>Page {currentPage} of {totalPages}</span>
+            <button onClick={handleNextPage} disabled={currentPage === totalPages}>
+              Next
+            </button>
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 
