@@ -4,6 +4,7 @@ import { Product } from '../services/productService';
 import Navbar from './Navbar';
 import axios from 'axios';
 import '../styles/ProductDetail.css';
+import { cartAPI } from '../services/api';
 
 const ProductDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -12,6 +13,8 @@ const ProductDetail: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
+  const [addCartLoading, setAddCartLoading] = useState(false);
+  const [addCartMsg, setAddCartMsg] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -43,9 +46,18 @@ const ProductDetail: React.FC = () => {
     }
   };
 
-  const handleAddToCart = () => {
-    // TODO: Implement add to cart logic
-    alert(`Added ${quantity} of ${product?.name} to cart!`);
+  const handleAddToCart = async () => {
+    if (!product) return;
+    setAddCartLoading(true);
+    setAddCartMsg(null);
+    try {
+      await cartAPI.addToCart(product._id, quantity);
+      setAddCartMsg('Added to cart!');
+    } catch (err) {
+      setAddCartMsg('Failed to add to cart');
+    } finally {
+      setAddCartLoading(false);
+    }
   };
 
   if (loading) return <div className="product-detail-loading">Loading...</div>;
@@ -80,7 +92,8 @@ const ProductDetail: React.FC = () => {
             <span className="product-detail-qty-value">{quantity}</span>
             <button className="product-detail-qty-btn" onClick={handleIncrease}>+</button>
           </div>
-          <button className="product-detail-addcart-btn" onClick={handleAddToCart}>Add to Cart</button>
+          <button className="product-detail-addcart-btn" onClick={handleAddToCart} disabled={addCartLoading}>Add to Cart</button>
+          {addCartMsg && <div style={{ marginTop: 8, color: addCartMsg === 'Added to cart!' ? 'green' : 'red' }}>{addCartMsg}</div>}
           <button className="product-detail-buy-btn">Buy Now</button>
         </div>
       </div>
