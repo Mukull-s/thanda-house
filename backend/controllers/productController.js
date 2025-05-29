@@ -13,7 +13,7 @@ cloudinary.config({
 // @access  Public
 const getProducts = async (req, res) => {
   try {
-    const { category, featured, search, sort, page = 1, limit = 10 } = req.query;
+    const { category, featured, search, sort, page = 1, limit = 10, name } = req.query;
     
     // Build query
     const query = {};
@@ -21,6 +21,10 @@ const getProducts = async (req, res) => {
     if (featured) query.featured = featured === 'true';
     if (search) {
       query.$text = { $search: search };
+    }
+    // Add name filtering (case-insensitive, partial match)
+    if (name) {
+      query.name = { $regex: name, $options: 'i' };
     }
 
     // Build sort
