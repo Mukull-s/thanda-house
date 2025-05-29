@@ -20,10 +20,16 @@ const ProductDetail: React.FC = () => {
     const fetchProduct = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`/api/products/${id}`);
-        setProduct(response.data);
-        setError(null);
+        const response = await axios.get(`http://localhost:5000/api/products/${id}`);
+        console.log('Product data received:', response.data);
+        if (response.data && response.data._id) {
+          setProduct(response.data);
+          setError(null);
+        } else {
+          setError('Invalid product data received');
+        }
       } catch (err) {
+        console.error('Error fetching product:', err);
         setError('Failed to fetch product details.');
       } finally {
         setLoading(false);
@@ -48,13 +54,24 @@ const ProductDetail: React.FC = () => {
 
   const handleAddToCart = async () => {
     if (!product) return;
+    if (!product._id) {
+      setAddCartMsg('Invalid product ID');
+      return;
+    }
     setAddCartLoading(true);
     setAddCartMsg(null);
     try {
-      await cartAPI.addToCart(product._id, quantity);
+      console.log('Product being added to cart:', {
+        id: product._id,
+        name: product.name,
+        quantity
+      });
+      const response = await cartAPI.addToCart(product._id, quantity);
+      console.log('Add to cart response:', response);
       setAddCartMsg('Added to cart!');
-    } catch (err) {
-      setAddCartMsg('Failed to add to cart');
+    } catch (err: any) {
+      console.error('Error adding to cart:', err);
+      setAddCartMsg(typeof err === 'string' ? err : (err?.message || 'Failed to add to cart'));
     } finally {
       setAddCartLoading(false);
     }
@@ -71,7 +88,7 @@ const ProductDetail: React.FC = () => {
       <div className="product-detail-container">
         <div className="product-detail-image-section">
           <div className="product-detail-image-bg"></div>
-          <img src={product.image.secure_url} alt={product.name} className="product-detail-image" />
+          <img src={product.image.url} alt={product.name} className="product-detail-image" />
         </div>
         <div className="product-detail-info-section">
           <h1 className="product-detail-title">{product.name}</h1>
