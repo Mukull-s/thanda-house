@@ -1,31 +1,50 @@
 # Thanda House 🍻
 
-Thanda House is a modern, Gen-Z inspired eCommerce website focused on delivering a wide variety of beer brands across India. It’s built to provide a premium, fast, and stylish shopping experience for users, with smooth animations, modern design, and a strong visual identity.
 
-## 🔥 Key Highlights
+## 🔥 Key Features
 
-- Fast and clean user interface
-- High-quality design and UI/UX
-- Product listings for various beer brands
-- Future support for cart, checkout, and payments
-- AI-powered search and recommendations *(coming soon)*
+* Lightning-fast, responsive user interface
+* Fully mobile-optimized design
+* Sleek UI/UX built with Tailwind CSS
+* Curated beer product listings with detailed descriptions
+* Firebase authentication (Google & Email)
+* Planned: Cart, checkout, and Razorpay payment integration
+* Planned: AI-powered product search & recommendation system
+
+---
 
 ## 🛠️ Tech Stack
 
-- HTML
-- Tailwind CSS
-- JavaScript
-- Figma (for wireframes and UI design)
-- [More technologies will be added as the project grows]
+**Frontend:**
 
+* React + Vite
+* TypeScript
+* Tailwind CSS
+* Figma (for UI/UX design)
+
+**Backend:**
+
+* Node.js + Express.js
+* MongoDB + Mongoose
+* Firebase Auth
+* Razorpay (for payments)
+* Cloudinary (for image uploads)
+
+---
 
 ## 🚧 Project Status
 
-Currently in design and development phase.  
-Wireframing and UI/UX planning is in progress.
+> Currently in development phase.
+>
+> * UI/UX wireframing completed
+> * Core frontend pages are being developed
+> * Backend APIs in progress
 
+---
 
-```
+## 📁 Frontend Folder Structure
+
+```bash
 thanda-house-frontend/
 ├── public/
 │   └── images/
@@ -49,47 +68,62 @@ thanda-house-frontend/
 ├── vite.config.ts
 ├── package.json
 └── README.md
-
 ```
 
+---
 
-```
+## 🧰 Backend Folder Structure
+
+```bash
 thanda-house-backend/
-├── config/ # DB connection, cloudinary config, payment gateway keys
-│ ├── db.js
-│ ├── cloudinary.js
-│ └── razorpay.js
-├── controllers/ # Logic for handling API requests
-│ ├── authController.js
-│ ├── productController.js
-│ ├── cartController.js
-│ ├── orderController.js
-│ ├── paymentController.js
-│ └── userController.js
-├── models/ # Mongoose models
-│ ├── User.js
-│ ├── Product.js
-│ ├── Cart.js
-│ └── Order.js
-├── middlewares/ # Middlewares like auth, admin check
-│ ├── authMiddleware.js
-│ ├── errorMiddleware.js
-│ └── uploadMiddleware.js # For images
-├── routes/ # Route definitions
-│ ├── authRoutes.js
-│ ├── productRoutes.js
-│ ├── cartRoutes.js
-│ ├── orderRoutes.js
-│ ├── paymentRoutes.js
-│ └── userRoutes.js
-├── utils/ # Helper utilities
-│ ├── generateToken.js
-│ └── apiResponse.js
-├── .env # Environment variables
-├── server.js # Entry point
-└── package.json # NPM scripts and packages
+├── config/
+│   ├── db.js
+│   ├── cloudinary.js
+│   └── razorpay.js
+├── controllers/
+│   ├── authController.js
+│   ├── productController.js
+│   ├── cartController.js
+│   ├── orderController.js
+│   ├── paymentController.js
+│   └── userController.js
+├── models/
+│   ├── User.js
+│   ├── Product.js
+│   ├── Cart.js
+│   └── Order.js
+├── middlewares/
+│   ├── authMiddleware.js
+│   ├── errorMiddleware.js
+│   └── uploadMiddleware.js
+├── routes/
+│   ├── authRoutes.js
+│   ├── productRoutes.js
+│   ├── cartRoutes.js
+│   ├── orderRoutes.js
+│   ├── paymentRoutes.js
+│   └── userRoutes.js
+├── utils/
+│   ├── generateToken.js
+│   └── apiResponse.js
+├── .env
+├── server.js
+└── package.json
 ```
 
-> 🍺 Built with love, design, and code by [Mukul Singhal]
+---
+
+## 🎨 Future Enhancements
+
+* [ ] Razorpay integration for secure payments
+* [ ] User cart and order history
+* [ ] Admin panel for adding new products
+* [ ] Social media login via OAuth
+* [ ] Real-time delivery tracking (Phase 2)
+
+---
 
 
+> 🍻 Built with love, caffeine, and code by [Mukul Singhal]
+
+Feel free to connect, contribute, or fork this repo 
